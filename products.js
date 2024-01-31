@@ -44,8 +44,9 @@ createApp({
           window.location = 'login.html';
         })
     },
-    getData() {
-      const url = `${this.apiUrl}/api/${this.apiPath}/admin/products/all`;
+    getData() {  //取得產品列表
+      const url = `${this.apiUrl}/api/${this.apiPath}/admin/products`;  //有分頁
+      //all全部的 
       axios.get(url).then((response) => {
         this.products = response.data.products;
       }).catch((err) => {
@@ -53,21 +54,13 @@ createApp({
       })
     },
     updateProduct() {
-      let url = `${this.apiUrl}/api/${this.apiPath}/admin/product`;
-      let http = 'post';
-
-      if (!this.isNew) {
-        url = `${this.apiUrl}/api/${this.apiPath}/admin/product/${this.tempProduct.id}`;
-        http = 'put'
-      }
-
-      axios[http](url, { data: this.tempProduct }).then((response) => {
-        alert(response.data.message);
-        productModal.hide();
-        this.getData();
+      const url = `${this.apiUrl}/api/${this.apiPath}/admin/product`;  
+      axios.post(url, { data: this.tempProduct } ).then((response) => {
+        this.products = response.data.products;
       }).catch((err) => {
         alert(err.response.data.message);
       })
+
     },
     openModal(isNew, item) {
       if (isNew === 'new') {
@@ -84,6 +77,8 @@ createApp({
         this.tempProduct = { ...item };
         delProductModal.show()
       }
+
+
     },
     delProduct() {
       const url = `${this.apiUrl}/api/${this.apiPath}/admin/product/${this.tempProduct.id}`;
